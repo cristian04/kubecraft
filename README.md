@@ -46,6 +46,12 @@ A simple Minecraft Docker client, to visualize and manage Kubernetes pods.
 
 	You can start, stop and remove containers interacting with levers and buttons. Some Docker commands are also supported directly via Minecraft's chat window, which is displayed by pressing the `T` key (default) or `/` key.
 
+> A command always starts with a `/`.
+>
+> If you open the prompt using the `/` key, it will be prefilled with a `/` character, but if you open it with the `T` key, it will not be prefilled and you will have to type a `/` yourself before typing your docker command.
+>
+> example: `/docker run redis`.
+
 ## How it works
 
 The Minecraft client itself remains unmodified. All operations are done server side.

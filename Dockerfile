@@ -12,4 +12,11 @@ RUN mv kubectl /bin/kubectl
 RUN chmod +x /bin/kubectl
 RUN chmod +x /bin/docker
 
+# Copy Cuberite server (Minecraft C++ server)
+# with special empty world for Dockercraft
+COPY ./cuberite_server /srv/cuberite_server
+COPY ./world /srv/world
+COPY ./docs/img/logo64x64.png /srv/logo.png
+
+COPY ./start.sh /srv/start.sh
 CMD ["/bin/bash","/srv/start.sh"]

@@ -3,7 +3,7 @@
 UpdateQueue = nil
 -- array of container objects
 Containers = {}
--- 
+--
 SignsToUpdate = {}
 
 -- as a lua array cannot contain nil values, we store references to this object
@@ -33,7 +33,7 @@ function Initialize(Plugin)
 
 	-- Command Bindings
 
-	cPluginManager.BindCommand("/docker", "*", DockerCommand, " - docker CLI commands")
+	cPluginManager.BindCommand("/kubectl", "*", DockerCommand, " - docker CLI commands")
 
 	Plugin:AddWebTab("Docker",HandleRequest_Docker)
 
@@ -96,7 +96,7 @@ function destroyContainer(id)
 			-- remove the container from the world
 			Containers[i]:destroy()
 			-- if the container being removed is the last element of the array
-			-- we reduce the size of the "Container" array, but if it is not, 
+			-- we reduce the size of the "Container" array, but if it is not,
 			-- we store a reference to the "EmptyContainerSpace" object at the
 			-- same index to indicate this is a free space now.
 			-- We use a reference to this object because it is not possible to
@@ -153,7 +153,7 @@ function updateContainer(id,name,imageRepo,imageTag,state)
 			index = i
 			break
 		end
-		x = x + CONTAINER_OFFSET_X			
+		x = x + CONTAINER_OFFSET_X
 	end
 
 	container = NewContainer()
@@ -181,7 +181,7 @@ function WorldStarted()
 		do
 			setBlock(UpdateQueue,x,y,z,E_BLOCK_WOOL,E_META_WOOL_WHITE)
 		end
-	end	
+	end
 end
 
 --
@@ -192,7 +192,7 @@ function PlayerJoined(Player)
 	LOG("executed: goproxy containers -> " .. tostring(r))
 end
 
--- 
+--
 function PlayerUsingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, CursorY, CursorZ, BlockType, BlockMeta)
 	LOG("Using block: " .. tostring(BlockX) .. "," .. tostring(BlockY) .. "," .. tostring(BlockZ) .. " - " .. tostring(BlockType) .. " - " .. tostring(BlockMeta))
 
@@ -211,7 +211,7 @@ function PlayerUsingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, Cu
 				Player:SendMessage("docker stop " .. string.sub(containerID,1,8))
 				r = os.execute("goproxy exec?cmd=docker+stop+" .. containerID)
 			-- start
-			else 
+			else
 				Player:SendMessage("docker start " .. string.sub(containerID,1,8))
 				os.execute("goproxy exec?cmd=docker+start+" .. containerID)
 			end
@@ -228,7 +228,7 @@ function PlayerUsingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, Cu
 		if running
 		then
 			Player:SendMessage("A running container can't be removed.")
-		else 
+		else
 			Player:SendMessage("docker rm " .. string.sub(containerID,1,8))
 			os.execute("goproxy exec?cmd=docker+rm+" .. containerID)
 		end
@@ -254,26 +254,20 @@ function DockerCommand(Split, Player)
 
 		LOG("Split[1]: " .. Split[1])
 
-		if Split[1] == "/docker"
+		if Split[1] == "/kubectl"
 		then
 			if table.getn(Split) > 1
 			then
-				if Split[2] == "pull" or Split[2] == "create" or Split[2] == "run" or Split[2] == "stop" or Split[2] == "rm" or Split[2] == "rmi" or Split[2] == "start" or Split[2] == "kill"
-				then
-					-- force detach when running a container
-					if Split[2] == "run"
-					then
-						table.insert(Split,3,"-d")
-					end
+
 
 					EntireCommand = table.concat(Split, "+")
 					-- remove '/' at the beginning
 					command = string.sub(EntireCommand, 2, -1)
-					
+
 					r = os.execute("goproxy exec?cmd=" .. command)
 
 					LOG("executed: " .. command .. " -> " .. tostring(r))
-				end
+
 			end
 		end
 	end
@@ -284,7 +278,7 @@ end
 
 
 function HandleRequest_Docker(Request)
-	
+
 	content = "[dockerclient]"
 
 	if Request.PostParams["action"] ~= nil then
@@ -292,7 +286,7 @@ function HandleRequest_Docker(Request)
 		action = Request.PostParams["action"]
 
 		-- receiving informations about one container
-		
+
 		if action == "containerInfos"
 		then
 			LOG("EVENT - containerInfos")
@@ -389,5 +383,4 @@ function OnServerPing(ClientHandle, ServerDescription, OnlinePlayers, MaxPlayers
 		end
 	end
 	return false, ServerDescription, OnlinePlayers, MaxPlayers, Favicon
-end				
-
+end

@@ -18,6 +18,5 @@ WORKDIR /srv
 RUN sh -c "$(wget -qO - https://raw.githubusercontent.com/cuberite/cuberite/master/easyinstall.sh)" && mv Server cuberite_server
 COPY ./world world
 COPY ./docs/img/logo64x64.png logo.png
-
 COPY ./start.sh start.sh
 CMD ["/bin/bash","/srv/start.sh"]

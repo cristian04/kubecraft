@@ -260,7 +260,6 @@ function DockerCommand(Split, Player)
 		then
 			if table.getn(Split) > 1
 			then
-
 					EntireCommand = table.concat(Split, "+")
 					-- remove '/' at the beginning
 					command = string.sub(EntireCommand, 2, -1)

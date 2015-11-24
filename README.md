@@ -4,6 +4,8 @@ A simple Minecraft Docker client, to visualize and manage Kubernetes pods.
 
 [YouTube video](https://youtu.be/A4qwsSEldHE)
 
+## How to run Kubecraft
+
 1. **Install Minecraft: [minecraft.net](https://minecraft.net)**
 
 	The Minecraft client hasn't been modified, just get the official release.

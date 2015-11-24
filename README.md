@@ -1,40 +1,38 @@
-# Dockercraft
+# Kubecraft
 
-![Dockercraft](../master/docs/img/logo.png?raw=true)
+A simple Minecraft Docker client, to visualize and manage Kubernetes pods.
 
-A simple Minecraft Docker client, to visualize and manage Docker containers.
+[YouTube video](https://youtu.be/A4qwsSEldHE)
 
-![Dockercraft](../master/docs/img/dockercraft.gif?raw=true)
-
-[YouTube video](http://www.youtube.com/watch?v=eZDlJgJf55o)
-
-## How to run Dockercraft
+## How to run Kubecraft
 
 1. **Install Minecraft: [minecraft.net](https://minecraft.net)**
 
 	The Minecraft client hasn't been modified, just get the official release.
 
-2. **Pull or build Dockercraft image:** (an offical image will be available soon)
+2. **Pull or build Kubecraft image:**
 
 	```
-	docker pull gaetan/dockercraft
+	docker pull stevesloka/kubecraft
 	```
 	or
 
 	```
-	git clone git@github.com:docker/dockercraft.git
-	docker build -t gaetan/dockercraft dockercraft
+	git clone git@github.com:stevesloka/kubecraft.git
+	cd kubecraft && go/src/kubeproxy/make
+	docker build -t stevesloka/kubecraft .
 	```
-3. **Run Dockercraft container:**
+3. **Run Kubecraft container:**
 
 	```
-	docker run -t -i -d -p 25565:25565 \
-	-v /var/run/docker.sock:/var/run/docker.sock \
-	--name dockercraft \
-	gaetan/dockercraft
+	docker run -t -d -i -p 25565:25565 \
+	--name kubecraft \
+	-e KUBE_CFG_FILE=/etc/kubeconfig \
+	-v ~/.kube/config:/etc/kubeconfig \
+	stevesloka/kubecraft
 	```
 
-	Mounting `/var/run/docker.sock` inside the container is necessary to send requests to the Docker remote API.
+	Copying `kubeconfig` file to enable k8s api server
 
 	The default port for a Minecraft server is *25565*, if you prefer a different one: `-p <port>:25565`
 
@@ -46,32 +44,9 @@ A simple Minecraft Docker client, to visualize and manage Docker containers.
 
 5. **Join Server!**
 
-	You should see at least one container in your world, which is the one hosting your Dockercraft server.
+	You should see at least one container in your world, which is the one hosting your Kubecraft server.
 
 	You can start, stop and remove containers interacting with levers and buttons. Some Docker commands are also supported directly via Minecraft's chat window, which is displayed by pressing the `T` key (default) or `/` key.
-
-![Dockercraft](../master/docs/img/landscape.png?raw=true)
-
-## Upcoming features
-
-This is just the beginning for Dockercraft! We should be able to support a lot more Docker features like:
-
-- List [Docker Machines](https://docs.docker.com/machine/) and use portals to see what's inside
-- Support more Docker commands
-- Display [logs](https://docs.docker.com/v1.8/reference/commandline/logs/) (for each container, pushing a simple button)
-- Represent links
-- Docker networking
-- Docker volumes
-- ...
-
-If you're interested about Dockercraft's design, discussions happen in [that issue](https://github.com/docker/dockercraft/issues/19).
-Also, we're using [Magicavoxel](https://voxel.codeplex.com) to do these nice prototypes:
-
-![Dockercraft](../master/docs/img/voxelproto.jpg?raw=true)
-
-You can find our Magicavoxel patterns in [that folder](![Dockercraft](https://github.com/docker/dockercraft/tree/master/docs/magicavoxel)).
-
-To get fresh news, follow our Twitter account: [@dockercraft](https://twitter.com/dockercraft).
 
 ## How it works
 
@@ -89,9 +64,9 @@ Plugin:AddWebTab("Docker",HandleRequest_Docker)
 
 Basically it means the plugin can catch POST requests sent to `http://127.0.0.1:8080/webadmin/Docker/Docker`.
 
-### Goproxy
+### Kubeproxy
 
-Events from the Docker remote API are transmitted to the Lua plugin by a small daemon (written in Go). (go/src/goproxy)
+Events from the Kubernetes API are transmitted to the Lua plugin by a small daemon (written in Go). (go/src/kubeproxy)
 
 ```go
 func MCServerRequest(data url.Values, client *http.Client) {
@@ -102,7 +77,7 @@ func MCServerRequest(data url.Values, client *http.Client) {
 }
 ```
 
-The goproxy binary can also be executed with parameters from the Lua plugin, to send requests to the daemon:
+The kubeproxy binary can also be executed with parameters from the Lua plugin, to send requests to the daemon:
 
 ```lua
 function PlayerJoined(Player)
@@ -110,8 +85,13 @@ function PlayerJoined(Player)
 	r = os.execute("goproxy containers")
 end
 ```
-## Contributing
+## Thanks!
 
-Want to hack on Dockercraft? [Docker's contributions guidelines](https://github.com/docker/docker/blob/master/CONTRIBUTING.md) apply.
+Thanks to the awesome folks who built Dockercraft! Please go check it out as well: https://github.com/docker/dockercraft
 
-![Dockercraft](../master/docs/img/contribute.png?raw=true)
+If you're interested about Dockercraft's design, discussions happen in [that issue](https://github.com/docker/dockercraft/issues/19).
+Also, we're using [Magicavoxel](https://voxel.codeplex.com) to do these nice prototypes:
+
+You can find our Magicavoxel patterns in [that folder](![Dockercraft](https://github.com/docker/dockercraft/tree/master/docs/magicavoxel)).
+
+To get fresh news, follow their Twitter account: [@dockercraft](https://twitter.com/dockercraft).

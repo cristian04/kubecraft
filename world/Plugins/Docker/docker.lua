@@ -224,14 +224,8 @@ function PlayerUsingBlock(Player, BlockX, BlockY, BlockZ, BlockFace, CursorX, Cu
 	if BlockType == 77
 	then
 		containerID, running = getRemoveButtonContainer(BlockX,BlockZ)
-
-		if running
-		then
-			Player:SendMessage("A running container can't be removed.")
-		else
-			Player:SendMessage("docker rm " .. string.sub(containerID,1,8))
-			os.execute("goproxy exec?cmd=docker+rm+" .. containerID)
-		end
+			Player:SendMessage("kubectl delete po " .. containerID)
+			os.execute("goproxy exec?cmd=kubectl+delete+po+" .. containerID .. "+--kubeconfig=/etc/kubeconfig")
 	end
 end
 
@@ -258,7 +252,6 @@ function DockerCommand(Split, Player)
 		then
 			if table.getn(Split) > 1
 			then
-
 
 					EntireCommand = table.concat(Split, "+")
 					-- remove '/' at the beginning

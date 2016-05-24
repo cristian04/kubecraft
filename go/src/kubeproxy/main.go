@@ -18,8 +18,7 @@ import (
 	kclientcmd "k8s.io/kubernetes/pkg/client/unversioned/clientcmd"
 	kframework "k8s.io/kubernetes/pkg/controller/framework"
 	kselector "k8s.io/kubernetes/pkg/fields"
-	"k8s.io/kubernetes/pkg/labels"
-	"k8s.io/kubernetes/pkg/util"
+	"k8s.io/kubernetes/pkg/util/wait"
 )
 
 // goproxy main purpose is to be a daemon connecting the docker daemon
@@ -135,8 +134,7 @@ func newKubeClient() (*kclient.Client, error) {
 
 	if masterURL != "" && *argKubecfgFile == "" {
 		config = &kclient.Config{
-			Host:    masterURL,
-			Version: "v1",
+			Host: masterURL,
 		}
 	} else {
 		overrides := &kclientcmd.ConfigOverrides{}
@@ -148,7 +146,6 @@ func newKubeClient() (*kclient.Client, error) {
 	}
 
 	logrus.Print("Using ", config.Host, " for kubernetes master")
-	logrus.Print("Using kubernetes API", config.Version)
 	return kclient.New(config)
 }
 
@@ -171,7 +168,7 @@ func watchPods(kubeClient *kclient.Client) kcache.Store {
 		},
 	)
 
-	go eController.Run(util.NeverStop)
+	go eController.Run(wait.NeverStop)
 	return eStore
 }
 
@@ -373,7 +370,7 @@ func listContainers(w http.ResponseWriter, r *http.Request) {
 	io.WriteString(w, "OK")
 
 	go func() {
-		pods, err := client.Pods("default").List(labels.Everything(), kselector.Everything())
+		pods, err := client.Pods("default").List(kapi.ListOptions{})
 
 		logrus.Print("made pods request")
 

@@ -264,7 +264,7 @@ function DockerCommand(Split, Player)
 					-- remove '/' at the beginning
 					command = string.sub(EntireCommand, 2, -1)
 
-					r = os.execute("goproxy exec?cmd=" .. command)
+					r = os.execute("goproxy exec?cmd=" .. command ..  "+--kubeconfig=/etc/kubeconfig")
 
 					LOG("executed: " .. command .. " -> " .. tostring(r))
 

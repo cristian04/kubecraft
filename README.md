@@ -40,19 +40,19 @@ A simple Minecraft Docker client, to visualize and manage Kubernetes pods.
 
 	The server address is the IP of Docker host. No need to specify a port if you used the default one.
 
-	If you're using [Docker Machine](https://docs.docker.com/machine/install-machine/): `docker-machine ip <machine_name>`
+	If you're using [Docker Machine](https://docs.docker.com/machine/install-machine/): `docker-machine ip <machine_name>` or if using the Docker beta just use `localhost`
 
 5. **Join Server!**
 
 	You should see at least one container in your world, which is the one hosting your Kubecraft server.
 
-	You can start, stop and remove containers interacting with levers and buttons. Some Docker commands are also supported directly via Minecraft's chat window, which is displayed by pressing the `T` key (default) or `/` key.
+	You can start, stop and remove containers interacting with levers and buttons. Kubectl commands are also supported directly via Minecraft's chat window, which is displayed by pressing the `T` key (default) or `/` key.
 
 > A command always starts with a `/`.
 >
-> If you open the prompt using the `/` key, it will be prefilled with a `/` character, but if you open it with the `T` key, it will not be prefilled and you will have to type a `/` yourself before typing your docker command.
+> If you open the prompt using the `/` key, it will be prefilled with a `/` character, but if you open it with the `T` key, it will not be prefilled and you will have to type a `/` yourself before typing your kubectl command.
 >
-> example: `/docker run redis`.
+> example: `/kubectl scale deployments my-nginx --replicas=2`.
 
 ## How it works
 

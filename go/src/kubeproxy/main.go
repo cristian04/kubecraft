@@ -174,16 +174,18 @@ func watchPods(kubeClient *kclient.Client) kcache.Store {
 
 func handleGenericPodEvent(pod *kapi.Pod) {
 	var repo = ""
-	var tag = ""
+
 	//TODO: Which container to use?
 	containerName := pod.ObjectMeta.Name
+	//repo := fmt.Sprintf("Namespace: %s", pod.ObjectMeta.Namespace)
+	restarts := "" //fmt.Sprintf("Restarts: %d", pod.Status.ContainerStatuses[0].RestartCount)
 
 	data := url.Values{
 		"action":    {"createContainer"},
 		"id":        {containerName},
 		"name":      {containerName},
 		"imageRepo": {repo},
-		"imageTag":  {tag}}
+		"imageTag":  {restarts}}
 
 	CuberiteServerRequest(data)
 }

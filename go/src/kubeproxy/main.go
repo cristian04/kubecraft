@@ -14,6 +14,7 @@ import (
 	"github.com/Sirupsen/logrus"
 	kapi "k8s.io/kubernetes/pkg/api"
 	kcache "k8s.io/kubernetes/pkg/client/cache"
+	"k8s.io/kubernetes/pkg/client/restclient"
 	kclient "k8s.io/kubernetes/pkg/client/unversioned"
 	kclientcmd "k8s.io/kubernetes/pkg/client/unversioned/clientcmd"
 	kframework "k8s.io/kubernetes/pkg/controller/framework"
@@ -115,7 +116,7 @@ func expandKubeMasterURL() (string, error) {
 
 func newKubeClient() (*kclient.Client, error) {
 	var (
-		config    *kclient.Config
+		config    *restclient.Config
 		err       error
 		masterURL string
 	)
@@ -133,7 +134,7 @@ func newKubeClient() (*kclient.Client, error) {
 	}
 
 	if masterURL != "" && *argKubecfgFile == "" {
-		config = &kclient.Config{
+		config = &restclient.Config{
 			Host: masterURL,
 		}
 	} else {
@@ -347,8 +348,14 @@ func execCmd(w http.ResponseWriter, r *http.Request) {
 
 	go func() {
 		cmd := r.URL.Query().Get("cmd")
+
+		logrus.Info("got cmd: " + cmd)
+
 		cmd, _ = url.QueryUnescape(cmd)
 		arr := strings.Split(cmd, " ")
+
+		logrus.Println("arr: ", arr)
+
 		if len(arr) > 0 {
 			cmd := exec.Command(arr[0], arr[1:]...)
 			// Stdout buffer

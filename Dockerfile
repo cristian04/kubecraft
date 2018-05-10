@@ -2,7 +2,7 @@ FROM golang:1.5.1
 
 ADD ./go/src/kubeproxy/kubeproxy /bin/goproxy
 
-RUN wget https://storage.googleapis.com/kubernetes-release/release/v1.2.4/bin/linux/amd64/kubectl
+RUN curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/darwin/amd64/kubectl
 RUN mv kubectl /bin/kubectl
 RUN chmod +x /bin/kubectl
 
